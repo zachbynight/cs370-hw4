@@ -12,3 +12,6 @@ test: build
 
 build:
 	javac ${MAIN_FILES}
+
+clean:
+	find . -name "*.class" -type f -delete
