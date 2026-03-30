@@ -1,7 +1,7 @@
 package main.java;
 
 
-public class BoundedBuffer {
+public class BoundedBuffer<T extends Object> {
     private Object[] items;
     private int numItems;
     private int nextEmptyIndex = 0;
@@ -27,17 +27,21 @@ public class BoundedBuffer {
 
     // If the buffer is full, replaces the first item and returns it
     public Object enqueue(Object item) {
+        if (isFull()) {
+            firstOccupiedIndex = incremement(firstOccupiedIndex);
+        }
         Object oldItem = items[nextEmptyIndex];
         items[nextEmptyIndex] = item;
         nextEmptyIndex = incremement(nextEmptyIndex);
         return oldItem;
     }
 
-    public Object dequeue() {
+    @SuppressWarnings("unchecked")
+    public T dequeue() {
         Object oldItem = items[firstOccupiedIndex];
         items[firstOccupiedIndex] = null;
         firstOccupiedIndex = incremement(firstOccupiedIndex);
-        return oldItem;
+        return (T) oldItem;
     }
 
     public Object peek(int i) {
@@ -49,6 +53,22 @@ public class BoundedBuffer {
 
     public Object peek() {
         return items[firstOccupiedIndex];
+    }
+
+    public boolean isFull() { 
+        return peek(nextEmptyIndex) != null;
+    }
+
+    public boolean isEmpty() { 
+        return peek() == null;
+    }
+
+    public int nextEmptyIndex() {
+        return nextEmptyIndex;
+    }
+
+    public int firstOccupiedIndex() {
+        return firstOccupiedIndex;
     }
 
     private int incremement(int n) {

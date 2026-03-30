@@ -1,0 +1,9 @@
+This program models the Producer-Consumer problem by implementing a bounded, circular buffer with a size of 1000. 
+
+Until a million numbers have been generated, the Producer attempts to produce random numbers in the range of [0, 100) to fill the buffer. If the buffer is full, the Producer waits. At the same time, the Consumer attempts to pull numbers from the buffer. If the buffer is empty, the consumer waits. Each time the Producer and Consumer have processed 100,000 numbers, they report their progress to the command line.
+
+To run the program, first enter
+    make build
+to build the program. Then enter
+    java main.java.ProducerConsumer <optional seed>
+to run the program. If present, the seed will be used to initialize the Producer's random number generator. If absent, a seed of 0 is used.

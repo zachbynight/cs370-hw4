@@ -29,9 +29,20 @@ public class TestBoundedBuffer extends Test {
         for(int i = 0; i < 5; i++) {
             buffer.enqueue(i);
         }
+        assertEquals("Indices match when full", true, buffer.firstOccupiedIndex() == buffer.nextEmptyIndex());
+
         for (int i = 0; i < 5; i++) {
             buffer.dequeue();
         }
         assertEquals("dequeue_when_empty", null, buffer.dequeue());
+
+        assertEquals("when empty 1", true, buffer.isEmpty());
+        assertEquals("when empty 2", false, buffer.isFull());
+
+        for (int i = 0; i < 5; i++) {
+            buffer.enqueue(i);
+        }
+        assertEquals("when full 1", true, buffer.isFull());
+        assertEquals("when full 2", false, buffer.isEmpty());
     }
 }
