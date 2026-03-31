@@ -7,16 +7,33 @@ import java.util.Random;
 public class Producer extends Agent {
     Random random;
     
-    public Producer(BoundedBuffer<Double> buffer, int numItems, int step, long seed) {
-        super(buffer, numItems, step);
-        random = new Random(seed);
+
+    public Producer(BoundedBuffer<Double> buffer, RunConfig runConfig) {
+        super(buffer, runConfig);
+        random = new Random(runConfig.seed);
     }
 
     public Double processAnItem() {
-        Double nextItem = 100. * random.nextDouble();
-        while (buffer.isFull()) {}
-        buffer.enqueue(nextItem);
-        return nextItem;
+        synchronized (buffer) {
+            try {
+                //System.out.println("Producer waiting for buffer accesss");
+                Double nextItem = 100. * random.nextDouble();
+                while (buffer.isFull()) {
+                    //System.out.println("Buffer is full, notify and wait for consumer");
+                    buffer.notify();
+                    buffer.wait();
+                }
+                buffer.enqueue(nextItem);
+                //System.out.println("Producer done with buffer, notifying consumer");
+                buffer.notify();
+                return nextItem;
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                return Double.NaN;
+            }
+        }
+
     }
 
     public String report(int i, Double cumulative) {

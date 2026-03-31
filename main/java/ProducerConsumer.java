@@ -2,16 +2,19 @@ package main.java;
 
 
 public class ProducerConsumer {
+    volatile static BoundedBuffer<Double> buffer;
+
     public static void main(String[] args) {
-        long seed = 0;
-        if (args.length == 2) {
-            seed = Long.valueOf(args[1]);
-        }
-        BoundedBuffer<Double> buffer = new BoundedBuffer<Double>(1000000);
-        Producer producer = new Producer(buffer, 1000000, 100000, seed);
-        Consumer consumer = new Consumer(buffer, 1000000, 100000);
-        producer.run();
-        consumer.run();
+        RunConfig runConfig = new RunConfig(args);
+        buffer = new BoundedBuffer<Double>(runConfig.bufferSize);
+        Producer producer = new Producer(buffer, runConfig);
+        Consumer consumer = new Consumer(buffer, runConfig);
+        Thread ProducerThread = new Thread(producer);
+        Thread ConsumerThread = new Thread(consumer);
+        ProducerThread.start();
+        ConsumerThread.start();
+        while (ProducerThread.getState() != Thread.State.TERMINATED || ConsumerThread.getState() != Thread.State.TERMINATED) {}
+        // Seed 0: items=50022261.155
         System.out.println("Exiting!");
     }
 }

@@ -1,5 +1,5 @@
 MAIN_DIR=main/java/
-MAIN_FILES=${MAIN_DIR}Agent.java ${MAIN_DIR}BoundedBuffer.java ${MAIN_DIR}Consumer.java ${MAIN_DIR}Producer.java ${MAIN_DIR}ProducerConsumer.java
+MAIN_FILE=${MAIN_DIR}ProducerConsumer.java
 MAIN_CLASS=main.java.ProducerConsumer
 
 TESTING_DIR=test/java/
@@ -14,11 +14,13 @@ test: build
 	java ${TESTING_CLASS}
 
 build:
-	javac ${MAIN_FILES}
+	javac ${MAIN_FILE}
 
 clean:
 	find . -name "*.class" -type f -delete
+	find . -name "*.zip" -type f -delete
+	clear
 
-export:
+zip:
 	make clean
 	zip -r ${ZIP_NAME} main makefile README

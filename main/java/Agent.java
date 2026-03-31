@@ -1,7 +1,7 @@
 package main.java;
 
 
-public abstract class Agent {
+public abstract class Agent implements Runnable {
     BoundedBuffer<Double> buffer;
     int numItems;
     int step;
@@ -9,10 +9,10 @@ public abstract class Agent {
     String action;
 
 
-    public Agent(BoundedBuffer<Double> buffer, int numItems, int step) {
+    public Agent(BoundedBuffer<Double> buffer, RunConfig runConfig) {
         this.buffer = buffer;
-        this.numItems = numItems;
-        this.step = step;
+        this.numItems = runConfig.numItems;
+        this.step = runConfig.reportStep;
     }
 
     public void run() {
